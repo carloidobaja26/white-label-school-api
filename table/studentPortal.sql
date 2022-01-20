@@ -70,7 +70,7 @@ CREATE TABLE "scholarship" (
 
 CREATE TABLE "studentAccount" (
   "id" SERIAL PRIMARY KEY,
-  "orDate" datetime,
+  "orDate" timestamp,
   "orNo" varchar,
   "assessment" float,
   "payment" float,
@@ -101,7 +101,7 @@ ALTER TABLE "studentInfo" ADD FOREIGN KEY ("id") REFERENCES "studentGrade" ("stu
 
 ALTER TABLE "subjectOffer" ADD FOREIGN KEY ("id") REFERENCES "subjectOfferSchedule" ("subjectCodeId");
 
-ALTER TABLE "schoolFaculty" ADD FOREIGN KEY ("id") REFERENCES "subjectOffer" ("id");
+ALTER TABLE "schoolFaculty" ADD FOREIGN KEY ("id") REFERENCES "subjectOfferSchedule" ("facultyId");
 
 ALTER TABLE "schoolSemester" ADD FOREIGN KEY ("id") REFERENCES "subjectOfferSchedule" ("schoolSemesterId");
 
@@ -120,3 +120,7 @@ ALTER TABLE "paymentMethod" ADD FOREIGN KEY ("id") REFERENCES "studentAccount" (
 ALTER TABLE "studentInfo" ADD FOREIGN KEY ("status") REFERENCES "studentGrade" ("gradeStatus");
 
 ALTER TABLE "subjectOffer" ADD FOREIGN KEY ("schoolYearId") REFERENCES "studentGrade" ("id");
+
+INSERT INTO studentInfo (studentNo, firstName,lastName,middleName,gender,placeOfBirth,mobileNo,email,residentialAddress,permanentAddress)
+  VALUES ('stu1', 'Juan','Luna','Park',1,'Sta. Mesa Metro Manila',091232232,'stu1@gmail.com','Recto Metro Manila','Mendiola Metro Manila'), 
+  ('stu2', 'Gregorio','Santos','Macalos',1,'San Juan Metro Manila',0988342323,'stu2@gmail.com','Pasig Metro Manila','Manda Metro Manila');

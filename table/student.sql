@@ -11,9 +11,14 @@ CREATE TABLE studentInfo (
   residentialAddress VARCHAR(255),
   permanentAddress VARCHAR(255)
 );
-INSERT INTO studentInfo (studentNo, firstName,lastName,middleName,gender,placeOfBirth,mobileNo,email,residentialAddress,permanentAddress)
-  VALUES ('stu1', 'Juan','Luna','Park',1,'Sta. Mesa Metro Manila',091232232,'stu1@gmail.com','Recto Metro Manila','Mendiola Metro Manila'), 
-  ('stu2', 'Gregorio','Santos','Macalos',1,'San Juan Metro Manila',0988342323,'stu2@gmail.com','Pasig Metro Manila','Manda Metro Manila');
+INSERT INTO "studentInfo" ("studentNo",
+  password,
+  "firstName",
+  "lastName",
+  "middleName",
+  gender,"placeOfBirth","mobileNo",email,"residentialAddress","permanentAddress","admissionStatus","scholasticStatus","courseAndDescription",status)
+  VALUES ('stu1','pass1', 'Juan','Luna','Park',1,'Sta. Mesa Metro Manila',091232232,'stu1@gmail.com','Recto Metro Manila','Mendiola Metro Manila','Enrolled','regular','BSCOE',1), 
+  ('stu2','pass2', 'Gregorio','Santos','Macalos',1,'San Juan Metro Manila',0988342323,'stu2@gmail.com','Pasig Metro Manila','Manda Metro Manila','Enrolled','regular','BSCOE',1);
 
 CREATE TABLE studentGrade (
   ID SERIAL PRIMARY KEY,

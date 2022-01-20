@@ -7,7 +7,7 @@ const pool = new Pool({
     port: 5432,
 })
 const getUsers = (request, response) => {
-    pool.query('SELECT * FROM studentInfo ORDER BY id ASC', (error, results) => {
+    pool.query('SELECT * FROM "studentInfo" ORDER BY id ASC', (error, results) => {
         if (error) {
             throw error
         }
@@ -17,7 +17,7 @@ const getUsers = (request, response) => {
 const getUserById = (request, response) => {
     const id = parseInt(request.params.id)
 
-    pool.query('SELECT * FROM studentInfo WHERE id = $1', [id], (error, results) => {
+    pool.query('SELECT * FROM "studentInfo" WHERE id = $1', [id], (error, results) => {
         if (error) {
             throw error
         }
