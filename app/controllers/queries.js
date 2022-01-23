@@ -1,11 +1,6 @@
 const Pool = require('pg').Pool
-const pool = new Pool({
-    user: 'me',
-    host: 'localhost',
-    database: 'studentportal',
-    password: 'password',
-    port: 5432,
-})
+const config = require('../config/dbConfig');
+const pool = new Pool(config.db);
 const getUsers = (request, response) => {
     pool.query('SELECT * FROM "studentInfo" ORDER BY id ASC', (error, results) => {
         if (error) {
