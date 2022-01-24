@@ -5,6 +5,8 @@ const port = 8081
 const db = require('./app/controllers/queries')
 const sc = require('./app/controllers/student')
 const ss = require('./app/controllers/schedule')
+const sg = require('./app/controllers/grade')
+
 app.use(bodyParser.json())
 app.use(
     bodyParser.urlencoded({
@@ -22,7 +24,9 @@ app.delete('/users/:id', db.deleteUser)
 
 app.get('/students', sc.getAllStudent)
 app.get('/student/:studentNo', sc.getStudentByStudentNo)
-app.get('/schedule', ss.getStudentSchedule)
+app.get('/schedule/:schoolSemesterId/:schoolYearId/:studentNo', ss.getStudentSchedule)
+app.get('/grade/:schoolSemesterId/:schoolYearId/:studentNo', sg.getStudentGrade)
+
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
 })
