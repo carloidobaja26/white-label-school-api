@@ -148,8 +148,11 @@ INSERT INTO "sectCode" ("sectCode") VALUES ('section 1');
 
 INSERT INTO "subjectOfferSchedule" ("subjectCodeId","sectCodeId","schedule","facultyId","schoolSemesterId") 
   VALUES ('1','1','Mon - Fri 10:00 - 1:00', '1','1');
+INSERT INTO "studentGrade" ("studentInfoId","subjectCodeId","finalGrade","gradeStatus","semester")
+VALUES ('1','1','2.0','P','1')
 
-SELECT so."subjectCode",so."description",so."unit",so."Lec",so."schoolYearId",sos."schoolSemesterId",sc."sectCode",sf."firstName",sf."lastName",sf."middleName"
+SELECT so."subjectCode",so."description",so."unit",so."Lec",so."schoolYearId",sos."schoolSemesterId",sc."sectCode",sf."firstName",sf."lastName",sf."middleName",
+sg."finalGrade",sg."gradeStatus"
 FROM "subjectOfferSchedule" as sos
 INNER JOIN "subjectOffer" as so 
 ON sos."subjectCodeId" = so."id" 
@@ -159,7 +162,9 @@ INNER JOIN "sectCode" as sc
 on sc."id" = sos."sectCodeId"
 INNER JOIN "schoolFaculty" as sf
 on sf."id" = sos."facultyId"
-WHERE sos."schoolSemesterId" = 1 AND so."schoolYearId" = 1 AND si."studentNo" = 'stu1';
+INNER JOIN "studentGrade" as sg
+on sg."studentInfoId" = si."id"
+WHERE sos."schoolSemesterId" = 1 AND so."schoolYearId" = 1 AND si."studentNo" = 'stu2';
 
 
 ALTER TABLE "studentInfo"
@@ -192,32 +197,6 @@ begin
 
 end;$$;
 
-create or replace FUNCTION test2(schoolSemesterId int,
-   schoolYearId int)
-  returns TABLE (subjectCode varchar(255),
-   description varchar(255)
-AS
-$func$
-   SELECT so."subjectCode",so."description"
-  FROM "subjectOfferSchedule" as sos
-  INNER JOIN "subjectOffer" as so 
-  ON sos."subjectCodeId" = so."id" 
-  INNER JOIN "studentInfo" as si
-  ON sos."schoolSemesterId" = so."id" 
-  INNER JOIN "sectCode" as sc 
-  on sc."id" = sos."sectCodeId"
-  INNER JOIN "schoolFaculty" as sf
-  on sf."id" = sos."facultyId"
-  WHERE sos."schoolSemesterId" = 1 AND so."schoolYearId" = 1 AND si."studentNo" = 'stu1';
-$func$ 
-LANGUAGE sql;
-
-CREATE FUNCTION add(integer, integer) RETURNS integer
-    AS 'select $1 + $2;'
-    LANGUAGE SQL
-    IMMUTABLE
-    RETURNS NULL ON NULL INPUT;
-
 CREATE OR REPLACE FUNCTION studentSchedule(ssId integer,syId integer,sNo varchar(255)) RETURNS TABLE(subjectCode varchar(255),description varchar(255),
 unit double precision,
 Lec double precision,
@@ -227,6 +206,7 @@ sectCode varchar(255),
 facultyFirstName varchar(255),
 facultyLastName varchar(255),
 facultyMiddleName varchar(255)
+
 ) AS $$
     DECLARE
     BEGIN
@@ -255,4 +235,88 @@ $$ LANGUAGE plpgsql;
 
 -- ALTER TABLE "subjectOffer" ALTER COLUMN "Lec" TYPE float(25) USING "Lec"::float(25);
 
-GRANT ALL PRIVILEGES ON TABLE "sectCode" TO me; 
+-- GRANT ALL PRIVILEGES ON TABLE "sectCode" TO me; 
+CREATE OR REPLACE FUNCTION studentGrade(ssId integer,syId integer,sNo varchar(255)) RETURNS TABLE(subjectCode varchar(255),description varchar(255),
+unit double precision,
+Lec double precision,
+schoolYearId int,
+schoolSemesterId int,
+sectCode varchar(255),
+facultyFirstName varchar(255),
+facultyLastName varchar(255),
+facultyMiddleName varchar(255),
+finalGrade double precision,
+gradeStatus varchar(255)
+) AS $$
+    DECLARE
+    BEGIN
+         RETURN QUERY
+              SELECT so."subjectCode",so."description",
+              so."unit",
+              so."Lec",
+              so."schoolYearId",
+              sos."schoolSemesterId",
+              sc."sectCode",
+              sf."firstName",
+              sf."lastName",
+              sf."middleName",
+              sg."finalGrade",
+              sg."gradeStatus"
+              FROM "subjectOfferSchedule" as sos
+              INNER JOIN "subjectOffer" as so 
+              ON sos."subjectCodeId" = so."id" 
+              INNER JOIN "studentInfo" as si
+              ON sos."schoolSemesterId" = so."id" 
+              INNER JOIN "sectCode" as sc 
+              on sc."id" = sos."sectCodeId"
+              INNER JOIN "schoolFaculty" as sf
+              on sf."id" = sos."facultyId"
+              INNER JOIN "studentGrade" as sg
+              on sg."studentInfoId" = si."id"
+              WHERE sos."schoolSemesterId" = ssId AND so."schoolYearId" = syId AND si."studentNo" = sNo;
+    END;
+$$ LANGUAGE plpgsql;
+-- GRANT ALL PRIVILEGES ON TABLE "studentGrade" TO me; 
+
+INSERT INTO "studentAccount" ("orDate","orNo","assessment","payment","balance","studentInfoId","semesterId","schoolYearId","amount","paymentMethodId","status","scholarshipId") 
+VALUES ('2004-10-19 10:23:54+02','Total Amount Due','4302','4302','4302','1','1','1','4302','1','1','1');
+
+INSERT INTO "paymentMethod" ("paymentMethod") VALUES ('Cash'),('Bank Transfer');
+
+    
+CREATE OR REPLACE FUNCTION studentAccount(ssId integer,syId integer,sNo varchar(255)) 
+  RETURNS TABLE(
+    schoolSemester varchar(255),
+    scholarship varchar(255),
+    schoolyear varchar(255),
+    orDate timestamp,
+    orNo varchar,
+    assessment double precision,
+    payment double precision,
+    balance double precision
+) AS $$
+    DECLARE
+    BEGIN
+         RETURN QUERY
+             SELECT ses."schoolSemester",
+              ss."scholarship",
+              sy."schoolyear",
+              sa."orDate",
+              sa."orNo",
+              sa."assessment",
+              sa."payment",
+              sa."balance"
+              FROM "studentAccount" as sa
+              INNER JOIN "studentInfo" as si
+              ON sa."studentInfoId" = si."id"
+              INNER JOIN "scholarship" as ss
+              ON sa."scholarshipId" = ss."id"
+              INNER JOIN "schoolYear" as sy
+              ON sa."schoolYearId" = sy."id"
+              INNER JOIN "schoolSemester" ses
+              ON sa."semesterId" = ses."id"
+              INNER JOIN "paymentMethod" pm
+              ON sa."paymentMethodId" = pm."id"
+              WHERE sa."semesterId" = ssId AND sa."schoolYearId" = syId AND si."studentNo" = sNo;
+    END;
+$$ LANGUAGE plpgsql;
