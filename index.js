@@ -13,19 +13,19 @@ const constants = require ('./app/constants/constant');
 const port = constants.PORT_VALUE
 //Cors config start
 const allowedOrigins = [
-    CONSTANTS.ALLOWED_ORIGINS_STAGING,
-    CONSTANTS.ALLOWED_ORIGINS_LIVE,
-    CONSTANTS.ALLOWED_ORIGINS_LOCALHOST,
+    constants.ALLOWED_ORIGINS_STAGING,
+    constants.ALLOWED_ORIGINS_LIVE,
+    constants.ALLOWED_ORIGINS_LOCALHOST,
   ];
   
-  cmsRequests.options("*", cors());
-  
-  var app = {
+  app.options("*", cors());
+  var corsOptions = {
     origin: function (origin, callback) {
       if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
-      } else {
-        callback(new Error(CONSTANTS.CORS_NOT_ALLOWED));
+      } 
+      else {
+        callback(new Error(constants.CORS_NOT_ALLOWED));
       }
     },
   };
@@ -39,17 +39,87 @@ app.use(
 app.get('/', (request, response) => {
     response.json({ info: 'Node.js, Express, and Postgres API' })
 })
-app.get('/users', db.getUsers)
-app.get('/users/:id', db.getUserById)
+app.get(
+    '/users',
+    cors(corsOptions),
+    function (req, res) {
+      try {
+        db.getUsers(req, res);
+      } catch (error) {
+        console.log(constants.ERROR_READ_MESSAGE + error)
+      }
+    }
+);
+app.get(
+    '/users/:id',
+    cors(corsOptions),
+    function (req, res) {
+      try {
+        db.getUserById(req, res);
+      } catch (error) {
+        console.log(constants.ERROR_READ_MESSAGE + error)
+      }
+    }
+);
+app.get(
+    '/students',
+    cors(corsOptions),
+    function (req, res) {
+      try {
+        sc.getAllStudent(req, res);
+      } catch (error) {
+        console.log(constants.ERROR_READ_MESSAGE + error)
+      }
+    }
+);
+app.get(
+    '/student/:studentNo',
+    cors(corsOptions),
+    function (req, res) {
+      try {
+        sc.getStudentByStudentNo(req, res);
+      } catch (error) {
+        console.log(constants.ERROR_READ_MESSAGE + error)
+      }
+    }
+);
+app.get(
+    '/schedule/:schoolSemesterId/:schoolYearId/:studentNo',
+    cors(corsOptions),
+    function (req, res) {
+      try {
+        ss.getStudentSchedule(req, res);
+      } catch (error) {
+        console.log(constants.ERROR_READ_MESSAGE + error)
+      }
+    }
+);
+app.get(
+    '/grade/:schoolSemesterId/:schoolYearId/:studentNo',
+    cors(corsOptions),
+    function (req, res) {
+      try {
+        sg.getStudentGrade(req, res);
+      } catch (error) {
+        console.log(constants.ERROR_READ_MESSAGE + error)
+      }
+    }
+);
+app.get(
+    '/account/:schoolSemesterId/:schoolYearId/:studentNo',
+    cors(corsOptions),
+    function (req, res) {
+      try {
+        sa.getStudentAccount(req, res);
+      } catch (error) {
+        console.log(constants.ERROR_READ_MESSAGE + error)
+      }
+    }
+);
+
 app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)
-
-app.get('/students', sc.getAllStudent)
-app.get('/student/:studentNo', sc.getStudentByStudentNo)
-app.get('/schedule/:schoolSemesterId/:schoolYearId/:studentNo', ss.getStudentSchedule)
-app.get('/grade/:schoolSemesterId/:schoolYearId/:studentNo', sg.getStudentGrade)
-app.get('/account/:schoolSemesterId/:schoolYearId/:studentNo', sa.getStudentAccount)
 
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
