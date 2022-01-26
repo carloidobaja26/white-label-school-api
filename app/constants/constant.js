@@ -1,0 +1,12 @@
+var CONSTANTS = {
+    EMAIL_SPLITTER: '@',
+    DOMAIN_SOURCE_STAGING:'',
+    DOMAIN_SOURCE_LIVE: '',
+    DOMAIN_SOURCE_LOCALHOST: 'http://localhost:8081/',
+    ALLOWED_ORIGINS_STAGING: '',
+    ALLOWED_ORIGINS_LIVE: '',
+    ALLOWED_ORIGINS_LOCALHOST: 'http://localhost:8081',
+    PORT_VALUE: '8081',
+    CORS_NOT_ALLOWED: 'Not allowed by CORS',
+};
+module.exports = CONSTANTS
