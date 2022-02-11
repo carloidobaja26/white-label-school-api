@@ -91,6 +91,8 @@ CREATE TABLE "paymentMethod" (
   "paymentMethod" varchar
 );
 
+
+
 CREATE TABLE "status" (
   "id" SERIAL PRIMARY KEY,
   "status" varchar
@@ -320,3 +322,66 @@ CREATE OR REPLACE FUNCTION studentAccount(ssId integer,syId integer,sNo varchar(
               WHERE sa."semesterId" = ssId AND sa."schoolYearId" = syId AND si."studentNo" = sNo;
     END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE PROCEDURE inser_subjectOffer("subjectCode" character varying, "description" character varying,"unit" double precision,"Lec" double precision,"schoolYearId" integer)
+ LANGUAGE SQL
+ AS $$
+ INSERT INTO public."subjectOffer" ("subjectCode", "description","unit", "Lec","schoolYearId") VALUES ("subjectCode", "description","unit", "Lec","schoolYearId");
+ $$;
+
+CALL inser_subjectOffer('subj2-1-1','Subject 2-1-1', 5,5,1);
+
+CREATE OR REPLACE PROCEDURE update_subjectOffer  
+(subjectCodeP VARCHAR(100),
+subjectDescriptionP VARCHAR(100),  
+unitP double precision,  
+LecP double precision,  
+schoolYearIdP integer,  
+subjectIdP integer)  
+LANGUAGE plpgsql AS  
+$$  
+BEGIN         
+UPDATE "subjectOffer" SET   
+"subjectCode" = subjectCodeP,  
+"description" = subjectDescriptionP,  
+"unit" = unitP,  
+"Lec" = LecP,  
+"schoolYearId" = schoolYearIdP  
+Where "subjectOffer".id = subjectIdP;  
+END  
+$$;  
+
+CALL update_subjectOffer('subj2-1-1','Subject 2-1-1',6,6,1,7);
+
+CREATE OR REPLACE PROCEDURE delete_subjectOffer  
+(subjectId integer)  
+LANGUAGE plpgsql AS  
+$$  
+BEGIN         
+UPDATE "subjectOffer" SET   
+"status" = 2
+Where "subjectOffer".id = subjectId;  
+END  
+$$;
+
+CALL delete_subjectOffer(6);
+
+CREATE OR REPLACE FUNCTION getSubjectOffer() 
+  RETURNS TABLE(
+    subjectCode varchar(255),
+    "description" varchar(255),
+    unit double precision,
+    Lec double precision,
+    schoolYearId integer,
+    "status" integer
+) AS $$
+    DECLARE
+    BEGIN
+         RETURN QUERY
+             SELECT id,
+            "subjectCode","description","unit","Lec","schoolYearId","status"
+              FROM "subjectOffer";
+    END;
+$$ LANGUAGE plpgsql;
+

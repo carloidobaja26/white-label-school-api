@@ -7,6 +7,7 @@ const sc = require('./app/controllers/student')
 const ss = require('./app/controllers/schedule')
 const sg = require('./app/controllers/grade')
 const sa = require('./app/controllers/account')
+const ssu = require('./app/controllers/subject')
 const cors = require("cors");
 const constants = require ('./app/constants/constant');
 
@@ -117,10 +118,65 @@ app.get(
     }
 );
 
+app.post(
+  '/createSubject',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssu.createSubject(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.post(
+  '/updatesubjects',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssu.updateSubject(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.post(
+  '/deletesubjects',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssu.deleteSubject(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.get(
+  '/subjects',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssu.getSubjects(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.get(
+  '/subjects/:id',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssu.getSubjectsById(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
 app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)
-
+// app.post('/subjects', ssu.createSubject)
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
 })
