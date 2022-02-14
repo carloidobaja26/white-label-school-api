@@ -8,6 +8,8 @@ const ss = require('./app/controllers/schedule')
 const sg = require('./app/controllers/grade')
 const sa = require('./app/controllers/account')
 const ssu = require('./app/controllers/subject')
+const ssus = require('./app/controllers/subjectSchedule')
+
 const cors = require("cors");
 const constants = require ('./app/constants/constant');
 
@@ -168,6 +170,62 @@ app.get(
   function (req, res) {
     try {
       ssu.getSubjectsById(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+
+app.post(
+  '/createSubjectSchedule',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssus.createSubjectSchedule(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.post(
+  '/updateSubjectSchedule',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssus.updateSubjectSchedule(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.post(
+  '/deleteSubjectSchedule',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssus.deleteSubjectSchedule(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.get(
+  '/getSubjectsSchedule',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssus.getSubjectsSchedule(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.get(
+  '/getSubjectsSchedule/:id',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      ssus.getSubjectsScheduleById(req, res);
     } catch (error) {
       console.log(constants.ERROR_READ_MESSAGE + error)
     }

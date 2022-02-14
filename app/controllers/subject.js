@@ -8,7 +8,7 @@ const createSubject = (request, response) => {
     const unit = request.body.unit;
     const Lec = request.body.Lec;
     const schoolYearId = parseInt(request.body.schoolYearId);
-    pool.query('CALL inser_subjectOffer($1,$2,$3,$4,$5)', [subjectCode, description,unit,Lec,schoolYearId], (error, results) => {
+    pool.query('CALL insert_subjectOffer($1,$2,$3,$4,$5)', [subjectCode, description,unit,Lec,schoolYearId], (error, results) => {
         if (error) {
             throw error
         }

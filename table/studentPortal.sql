@@ -324,13 +324,20 @@ CREATE OR REPLACE FUNCTION studentAccount(ssId integer,syId integer,sNo varchar(
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE PROCEDURE inser_subjectOffer("subjectCode" character varying, "description" character varying,"unit" double precision,"Lec" double precision,"schoolYearId" integer)
- LANGUAGE SQL
- AS $$
- INSERT INTO public."subjectOffer" ("subjectCode", "description","unit", "Lec","schoolYearId") VALUES ("subjectCode", "description","unit", "Lec","schoolYearId");
- $$;
+CREATE OR REPLACE PROCEDURE insert_subjectOffer("subjectCode" character varying,
+"description" character varying,
+"unit" double precision,
+"Lec" double precision,
+"schoolYearId" integer)
+LANGUAGE SQL
+AS $$
+INSERT INTO public."subjectOffer" ("subjectCode",
+"description","unit",
+"Lec","schoolYearId","status")
+VALUES ("subjectCode", "description","unit", "Lec","schoolYearId",1);
+$$;
 
-CALL inser_subjectOffer('subj2-1-1','Subject 2-1-1', 5,5,1);
+CALL insert_subjectOffer('subj2-1-1','Subject 2-1-1', 5,5,1);
 
 CREATE OR REPLACE PROCEDURE update_subjectOffer  
 (subjectCodeP VARCHAR(100),
@@ -385,3 +392,50 @@ CREATE OR REPLACE FUNCTION getSubjectOffer()
     END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE PROCEDURE insert_subjectSchedule("subjectCodeId" integer,
+"sectCodeId" integer,
+"schedule" varchar(1000),
+"facultyId" integer,
+"schoolSemesterId" integer)
+LANGUAGE SQL
+AS $$
+INSERT INTO public."subjectOfferSchedule" ("subjectCodeId",
+"sectCodeId","schedule",
+"facultyId","schoolSemesterId","status")
+VALUES ("subjectCodeId", "sectCodeId","schedule", "facultyId","schoolSemesterId",1);
+$$;
+
+CALL insert_subjectSchedule(1,2,'Wed - Tue 10:00 - 11:00', 1,2);
+
+CREATE OR REPLACE PROCEDURE update_subjectSchedule  
+(subjectIdP integer,
+sectCodeIdP integer,
+scheduleP VARCHAR(100),  
+facultyIdP integer,  
+schoolSemesterIdP integer)  
+LANGUAGE plpgsql AS  
+$$  
+BEGIN         
+UPDATE "subjectOfferSchedule" SET   
+"sectCodeId" = sectCodeIdP,  
+"schedule" = scheduleP,  
+"facultyId" = facultyIdP,  
+"schoolSemesterId" = schoolSemesterIdP  
+Where "subjectOfferSchedule".id = subjectIdP;  
+END  
+$$;  
+CALL update_subjectSchedule(1,2,'Mon - Tue 10:00 - 11:00',2,2);
+
+CREATE OR REPLACE PROCEDURE delete_subjectSchedule 
+(subjectId integer)  
+LANGUAGE plpgsql AS  
+$$  
+BEGIN         
+UPDATE "subjectOfferSchedule" SET   
+"status" = 2
+Where "subjectOfferSchedule".id = subjectId;  
+END  
+$$;
+
+CALL delete_subjectSchedule(1);
