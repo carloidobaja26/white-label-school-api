@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
-
+const bcrypt = require("bcrypt");
 const db = require('./app/controllers/queries')
 const sc = require('./app/controllers/student')
 const ss = require('./app/controllers/schedule')
@@ -40,8 +40,13 @@ app.use(
     })
 )
 app.get('/', (request, response) => {
-    response.json({ info: 'Node.js, Express, and Postgres API' })
+  passwordTest()
+  response.json({ info: 'Node.js, Express, and Postgres API' })
 })
+async function passwordTest() {
+  const hashedPassword = await bcrypt.hash('password',10);
+  console.log(hashedPassword);
+}
 app.get(
     '/users',
     cors(corsOptions),
@@ -231,6 +236,11 @@ app.get(
     }
   }
 );
+
+
+
+
+
 app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)

@@ -439,3 +439,54 @@ END
 $$;
 
 CALL delete_subjectSchedule(1);
+
+ALTER TABLE "schoolFaculty" ADD COLUMN "password" varchar(255),ADD COLUMN "gender" integer,
+ADD COLUMN "placeOfBirth" varchar(255),
+ADD COLUMN "mobileNo" integer,
+ADD COLUMN "email" varchar(255),
+ADD COLUMN "residentialAddress" varchar(255),
+ADD COLUMN "permanentAddress" varchar(255),
+ADD COLUMN "admissionStatus" varchar(255),
+ADD COLUMN "status" int;
+
+CREATE OR REPLACE PROCEDURE insert_student_info(
+"studentNo" varchar(255),
+"password" varchar(255),
+"firstName" varchar(255),
+"lastName" varchar(255),
+"middleName" varchar(255),
+"gender" integer,
+"placeOfBirth" varchar(255),
+"mobileNo" integer,
+"email" varchar(255),
+"residentialAddress" varchar(255),
+"permanentAddress" varchar(255),
+"admissionStatus" integer,
+"scholasticStatus" integer,
+"courseAndDescription" integer,
+"schoolYearId" integer,
+"schoolSemesterId" integer)
+LANGUAGE SQL
+AS $$
+INSERT INTO public."studentInfo" ("studentNo",
+"password","firstName",
+"lastName","middleName","gender",
+"placeOfBirth","mobileNo","email",
+"residentialAddress","permanentAddress","admissionStatus",
+"scholasticStatus","courseAndDescription","status",
+"schoolYearId","schoolSemesterId"
+)
+VALUES ("studentNo", 
+"password","firstName", "lastName","middleName",
+"gender","placeOfBirth", "mobileNo",
+"email","residentialAddress", "permanentAddress",
+"admissionStatus","scholasticStatus", "courseAndDescription",1,
+"schoolYearId", "schoolSemesterId");
+$$;
+
+ALTER TABLE "studentInfo" ALTER COLUMN "gender" TYPE integer, ALTER COLUMN "admissionStatus" TYPE integer USING ("admissionStatus"::integer)
+,ALTER COLUMN "scholasticStatus" TYPE integer USING ("scholasticStatus"::integer)
+,ALTER COLUMN "courseAndDescription" TYPE integer USING ("courseAndDescription"::integer);
+
+CALL insert_student_info('studentNo','password','firstname','lastName','middleName',1,'placeOfBirth',
+2,'emaill','residentialAddress','permanentAddress',2,2,2,2,1);
