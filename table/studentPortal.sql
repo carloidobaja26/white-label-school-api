@@ -490,3 +490,96 @@ ALTER TABLE "studentInfo" ALTER COLUMN "gender" TYPE integer, ALTER COLUMN "admi
 
 CALL insert_student_info('studentNo','password','firstname','lastName','middleName',1,'placeOfBirth',
 2,'emaill','residentialAddress','permanentAddress',2,2,2,2,1);
+
+CREATE OR REPLACE PROCEDURE update_student_info 
+(idp integer,
+mobileNop integer,
+emailp VARCHAR(255),  
+residentialAddressp VARCHAR(255))  
+LANGUAGE plpgsql AS  
+$$  
+BEGIN         
+UPDATE "studentInfo" SET   
+"mobileNo" = mobileNop,  
+"email" = emailp,  
+"residentialAddress" = residentialAddressp
+Where "studentInfo".id = idp;  
+END  
+$$; 
+CALL update_student_info(3,233,'hello@gmail.com','pasiggg');
+
+
+CREATE OR REPLACE PROCEDURE delete_student_info 
+(idp integer)  
+LANGUAGE plpgsql AS  
+$$  
+BEGIN         
+UPDATE "studentInfo" SET   
+"status" = 2
+Where "studentInfo".id = idp;  
+END  
+$$;  
+
+CALL delete_student_info(2);
+
+
+CREATE OR REPLACE PROCEDURE insert_school_faculty(
+"password" varchar(255),
+"firstName" varchar(255),
+"lastName" varchar(255),
+"middleName" varchar(255),
+"gender" integer,
+"placeOfBirth" varchar(255),
+"mobileNo" integer,
+"email" varchar(255),
+"residentialAddress" varchar(255),
+"permanentAddress" varchar(255))
+LANGUAGE SQL
+AS $$
+INSERT INTO public."schoolFaculty" (
+"password","firstName",
+"lastName","middleName","gender",
+"placeOfBirth","mobileNo","email",
+"residentialAddress","permanentAddress",
+"status"
+)
+VALUES ("password","firstName", "lastName","middleName",
+"gender","placeOfBirth", "mobileNo",
+"email","residentialAddress", "permanentAddress",1);
+$$;
+
+CALL insert_school_faculty('password','firstname','lastName','middleName',1,'placeOfBirth',
+2,'emaill','residentialAddress','permanentAddress');
+
+
+CREATE OR REPLACE PROCEDURE update_school_faculty 
+(idp integer,
+mobileNop integer,
+emailp VARCHAR(255),  
+residentialAddressp VARCHAR(255))  
+LANGUAGE plpgsql AS  
+$$  
+BEGIN         
+UPDATE "schoolFaculty" SET   
+"mobileNo" = mobileNop,  
+"email" = emailp,  
+"residentialAddress" = residentialAddressp
+Where "schoolFaculty".id = idp;  
+END  
+$$; 
+
+CALL update_school_faculty(3,233,'hello@gmail.com','pasiggg');
+
+
+CREATE OR REPLACE PROCEDURE delete_school_faculty 
+(idp integer)  
+LANGUAGE plpgsql AS  
+$$  
+BEGIN         
+UPDATE "schoolFaculty" SET   
+"status" = 2
+Where "schoolFaculty".id = idp;  
+END  
+$$;  
+
+CALL delete_school_faculty(3);

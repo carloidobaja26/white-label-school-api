@@ -9,7 +9,8 @@ const sg = require('./app/controllers/grade')
 const sa = require('./app/controllers/account')
 const ssu = require('./app/controllers/subject')
 const ssus = require('./app/controllers/subjectSchedule')
-
+const st = require('./app/controllers/studentInfo')
+const sf = require('./app/controllers/faculty')
 const cors = require("cors");
 const constants = require ('./app/constants/constant');
 
@@ -237,9 +238,118 @@ app.get(
   }
 );
 
+app.post(
+  '/addStudentInfo',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      st.createStudentInfo(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.post(
+  '/updateStudentInfo',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      st.updateStudentInfo(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.post(
+  '/deleteStudentInfo',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      st.deleteStudentInfo(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.get(
+  '/getStudentInfo',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      st.getStudentInfo(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.get(
+  '/getStudentInfo/:id',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      st.getStudentInfoById(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
 
 
-
+app.post(
+  '/addSchoolFaculty',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      sf.createSchoolFaculty(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.post(
+  '/updateSchoolFaculty',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      sf.updateSchoolFaculty(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.post(
+  '/deleteSchoolFaculty',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      sf.deleteSchoolFaculty(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.get(
+  '/getSchoolFaculty',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      sf.getSchoolFaculty(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.get(
+  '/getSchoolFaculty/:id',
+  // cors(corsOptions),
+  function (req, res) {
+    try {
+      sf.getSchoolFacultyById(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
 
 app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
