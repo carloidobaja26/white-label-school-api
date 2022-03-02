@@ -11,6 +11,8 @@ const ssu = require('./app/controllers/subject')
 const ssus = require('./app/controllers/subjectSchedule')
 const st = require('./app/controllers/studentInfo')
 const sf = require('./app/controllers/faculty')
+const l = require('./app/controllers/login')
+
 const cors = require("cors");
 const constants = require ('./app/constants/constant');
 
@@ -243,6 +245,7 @@ app.post(
   // cors(corsOptions),
   function (req, res) {
     try {
+    // console.log(req.body.studentInfo.firstName);
       st.createStudentInfo(req, res);
     } catch (error) {
       console.log(constants.ERROR_READ_MESSAGE + error)
@@ -297,7 +300,7 @@ app.get(
 
 app.post(
   '/addSchoolFaculty',
-  // cors(corsOptions),
+  cors(corsOptions),
   function (req, res) {
     try {
       sf.createSchoolFaculty(req, res);
@@ -350,7 +353,28 @@ app.get(
     }
   }
 );
-
+app.post(
+  '/logInStudentInfo',
+  cors(corsOptions),
+  function (req, res) {
+    try {
+      l.logInStudentInfo(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
+app.post(
+  '/logInFacultyInfo',
+  cors(corsOptions),
+  function (req, res) {
+    try {
+      l.logInFacultyInfo(req, res);
+    } catch (error) {
+      console.log(constants.ERROR_READ_MESSAGE + error)
+    }
+  }
+);
 app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)

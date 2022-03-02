@@ -1,20 +1,25 @@
 const Pool = require('pg').Pool
 const config = require('../config/dbConfig');
 const pool = new Pool(config.db);
+const bcrypt = require("bcrypt");
 
-const createSchoolFaculty = (request, response) => {
-    const password = request.body.password;
-    const firstname = request.body.firstname;
-    const lastName = request.body.lastName;
-    const middleName = request.body.middleName;
-    const gender = request.body.gender;
-    const placeOfBirth = request.body.placeOfBirth;
-    const mobileNo = request.body.mobileNo;
-    const email = request.body.email;
-    const residentialAddress = request.body.residentialAddress;
-    const permanentAddress = request.body.permanentAddress;
-    pool.query('CALL insert_school_faculty($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)', [password,firstname,lastName,
-        middleName,gender,placeOfBirth,mobileNo,email,residentialAddress,permanentAddress], 
+const createSchoolFaculty = async (request, response) => {
+    const date = new Date();
+    let year = date.getFullYear();
+    console.log(request.body.facultyInfo.password)
+    const hashedPassword = await bcrypt.hash(request.body.facultyInfo.password,10);
+    const facultyNo = year + '-' +  Math.random().toString(36).substr(2, 9) + '-ST-0';
+    const firstname = request.body.facultyInfo.firstname;
+    const lastName = request.body.facultyInfo.lastName;
+    const middleName = request.body.facultyInfo.middleName;
+    const gender = request.body.facultyInfo.gender;
+    const placeOfBirth = request.body.facultyInfo.placeOfBirth;
+    const mobileNo = request.body.facultyInfo.mobileNo;
+    const email = request.body.facultyInfo.email;
+    const residentialAddress = request.body.facultyInfo.residentialAddress;
+    const permanentAddress = request.body.facultyInfo.permanentAddress;
+    pool.query('CALL insert_school_faculty($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)', [hashedPassword,firstname,lastName,
+        middleName,gender,placeOfBirth,mobileNo,email,residentialAddress,permanentAddress,facultyNo], 
     (error, results) => {
         if (error) {
             throw error

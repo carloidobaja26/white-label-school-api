@@ -533,7 +533,8 @@ CREATE OR REPLACE PROCEDURE insert_school_faculty(
 "mobileNo" integer,
 "email" varchar(255),
 "residentialAddress" varchar(255),
-"permanentAddress" varchar(255))
+"permanentAddress" varchar(255),
+"facultyNo" varchar(255))
 LANGUAGE SQL
 AS $$
 INSERT INTO public."schoolFaculty" (
@@ -541,15 +542,15 @@ INSERT INTO public."schoolFaculty" (
 "lastName","middleName","gender",
 "placeOfBirth","mobileNo","email",
 "residentialAddress","permanentAddress",
-"status"
+"status","facultyNo"
 )
 VALUES ("password","firstName", "lastName","middleName",
 "gender","placeOfBirth", "mobileNo",
-"email","residentialAddress", "permanentAddress",1);
+"email","residentialAddress", "permanentAddress",1,"facultyNo");
 $$;
 
 CALL insert_school_faculty('password','firstname','lastName','middleName',1,'placeOfBirth',
-2,'emaill','residentialAddress','permanentAddress');
+2,'emaill','residentialAddress','permanentAddress',"facultyNo");
 
 
 CREATE OR REPLACE PROCEDURE update_school_faculty 
