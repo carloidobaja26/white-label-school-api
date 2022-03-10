@@ -13,6 +13,7 @@ const st = require('./app/controllers/studentInfo')
 const sf = require('./app/controllers/faculty')
 const l = require('./app/controllers/login')
 
+const se = require('./app/controllers/enrollment')
 const cors = require("cors");
 const constants = require ('./app/constants/constant');
 
@@ -122,6 +123,17 @@ app.get(
     function (req, res) {
       try {
         sa.getStudentAccount(req, res);
+      } catch (error) {
+        console.log(constants.ERROR_READ_MESSAGE + error)
+      }
+    }
+);
+app.get(
+    '/enrollment/:semesterId/:schoolYearId/:studentNo',
+    cors(corsOptions),
+    function (req, res) {
+      try {
+        se.getStudentEnrollment(req, res);
       } catch (error) {
         console.log(constants.ERROR_READ_MESSAGE + error)
       }
