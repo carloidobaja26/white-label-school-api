@@ -7,6 +7,7 @@ const sc = require('./app/controllers/student')
 const ss = require('./app/controllers/schedule')
 const sg = require('./app/controllers/grade')
 const sa = require('./app/controllers/account')
+const se = require('./app/controllers/enrollment')
 const cors = require("cors");
 const constants = require ('./app/constants/constant');
 
@@ -116,11 +117,25 @@ app.get(
       }
     }
 );
+app.get(
+    '/enrollment/:semesterId/:schoolYearId/:studentNo',
+    cors(corsOptions),
+    function (req, res) {
+      try {
+        se.getStudentEnrollment(req, res);
+      } catch (error) {
+        console.log(constants.ERROR_READ_MESSAGE + error)
+      }
+    }
+);
 
 app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)
 
+app.get('/students', sc.getAllStudent)
+app.get('/student/:studentNo', sc.getStudentByStudentNo)
+app.get('/schedule', ss.getStudentSchedule)
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
 })

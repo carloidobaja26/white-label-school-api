@@ -29,7 +29,7 @@ CREATE TABLE "studentGrade" (
 CREATE TABLE "schoolYear" (
   "id" SERIAL PRIMARY KEY,
   "schoolyear" varchar
-);
+
 
 CREATE TABLE "schoolSemester" (
   "id" SERIAL PRIMARY KEY,
@@ -45,6 +45,25 @@ CREATE TABLE "subjectOffer" (
   "Lec" varchar,
   "schoolYearId" int
 );
+
+INSERT INTO "subjectOffer" (
+  "id",
+  "subjectCode",
+  "description",
+  "unit",
+  "Lec",
+  "schoolYearId"
+)
+VALUES 
+(1, 'SUB_488', 'Design 1', 3.0, 2.5, 2021), 
+(2, 'SUB_19', 'Data Structure', 1.5, 2.0, 2021),
+(3, 'SUB_805', 'Data Structure', 1.5, 2.5, 2021),
+(4, 'SUB_200', 'Data Structure', 3.0, 2.0, 2021), 
+(5, 'SUB_18', 'Signal', 3.0, 2.75, 2021),
+(6, 'SUB_693', 'Data Structure', 1.5, 2.75, 2021);
+
+SELECT SUM (unit) AS total
+FROM "subjectOffer"
 
 CREATE TABLE "subjectOfferSchedule" (
   "id" SERIAL PRIMARY KEY,
@@ -86,15 +105,117 @@ CREATE TABLE "studentAccount" (
   "status" int
 );
 
+INSERT INTO "studentAccount" (
+  id,
+  "orDate",
+  "orNo",
+  assessment,
+  payment,
+  balance,
+  "studentInfoId",
+  "semesterId",
+  "schoolYearId",
+  amount,
+  "paymentMethodId",
+  status
+  )
+  VALUES (1, 'Jul 24, 2020 7:19 PM', 'Total Amount Due', 4302, 4576, 2475, 1, 'Summer', 1005, 11353, 'Cash', 'Enrolled');
+  -- (2, 'Jul 29, 2021 6:04 AM', 'Total Due', 2155, 4900, 4368, 'stu2', 'Summer', 1005, '11353, 'Cash', 'Enrolled');
+
+
+-- ALTER TABLE "studentAccount" ALTER COLUMN "semesterId" TYPE varchar USING "semesterId"::int;
+-- ALTER TABLE "studentAccount" ALTER COLUMN "paymentMethodId" TYPE varchar USING "paymentMethodId"::int;
+-- ALTER TABLE "studentAccount" ALTER COLUMN status TYPE varchar USING status::int;
+-- ALTER TABLE "studentAccount" ALTER COLUMN "studentInfoId" TYPE varchar USING "studentInfoId"::int;
+
+VALUES (
+1, 
+'Jul 24, 2020 7:19 PM', 
+'Total Amount Due', 
+4302 
+4576, 
+2475, 
+1, > studentInfo.id
+3 > schoolSemester > 3 (summer)
+1 ?  schoolYear -> 1 (2021)
+11353, 
+'Cash', -> paymentMethod -> 1
+'Enrolled' -> status -> 2
+)
+
+Expected output: (1, 'Jul 24, 2020 7:19 PM', 'Total Amount Due', 4302, 4576, 2475, 1, 3, 1, 11353, 1, 2)
+
+SELECT sa."id", s."status", sy."schoolyear", ss."schoolSemester", sa."amount", sa."balance", pm."paymentMethod"
+
+FROM "studentAccount" as sa
+INNER JOIN "paymentMethod" pm
+ON sa."paymentMethodId" = pm."id"
+INNER JOIN "schoolSemester" ss
+ON sa."semesterId" = ss."id"
+INNER JOIN "status" as s
+ON sa."status" = s."id"
+INNER JOIN "schoolYear" as sy
+ON sa."schoolYearId" = sy."id"
+INNER JOIN "studentInfo" as si
+ON sa."studentInfoId" = si."id";
+WHERE sos."schoolSemesterId" = 1 AND so."schoolYearId" = 1 AND si."studentNo" = 'stu1';
+
+
+CREATE OR REPLACE FUNCTION studentEnrollment(sId integer,syId integer,sN varchar(255)) RETURNS TABLE (
+  id int,
+  status varchar,
+  schoolyear varchar(255),
+  schoolSemester varchar(255),
+  amount double precision,
+  balance double precision,
+  paymentMethod varchar(255)
+) AS $$
+  DECLARE
+  BEGIN
+    RETURN QUERY
+      SELECT sa."id", 
+      s."status", 
+      sy."schoolyear", 
+      ss."schoolSemester", 
+      sa."amount", 
+      sa."balance", 
+      pm."paymentMethod"
+      FROM "studentAccount" as sa
+      INNER JOIN "paymentMethod" pm
+      ON sa."paymentMethodId" = pm."id"
+      INNER JOIN "schoolSemester" ss
+      ON sa."semesterId" = ss."id"
+      INNER JOIN "status" as s
+      ON sa."status" = s."id"
+      INNER JOIN "schoolYear" as sy
+      ON sa."schoolYearId" = sy."id"
+      INNER JOIN "studentInfo" as si
+      ON sa."studentInfoId" = si."id"
+      WHERE sa."semesterId" = sId AND sa."schoolYearId" = syId AND si."studentNo" = sN;
+  END;
+$$ LANGUAGE plpgsql;
+
+
+SELECT * FROM studentEnrollment(1,1,'stu1');
+
+
 CREATE TABLE "paymentMethod" (
   "id" SERIAL PRIMARY KEY,
   "paymentMethod" varchar
 );
+INSERT INTO "paymentMethod" (
+  "id",
+  "paymentMethod"
+)
+VALUES (1, 'Cash'), (2, 'Bank Transfer');
 
 CREATE TABLE "status" (
   "id" SERIAL PRIMARY KEY,
   "status" varchar
 );
+
+ALTER TABLE "studentAccount" ADD COLUMN "scholarshipId" int;
+ALTER TABLE "studentAccount" DROP COLUMN scholarshipId;
 
 ALTER TABLE "subjectOffer" ADD FOREIGN KEY ("id") REFERENCES "studentGrade" ("subjectCodeId");
 
