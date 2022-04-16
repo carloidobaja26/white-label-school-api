@@ -392,6 +392,6 @@ app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)
 // app.post('/subjects', ssu.createSubject)
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
     console.log(`App running on port ${port}.`)
 })
