@@ -17,7 +17,7 @@ const se = require('./app/controllers/enrollment')
 const cors = require("cors");
 const constants = require ('./app/constants/constant');
 
-const port =  process.env.PORT || 8081
+var port = process.env.PORT || 8081;
 //Cors config start
 const allowedOrigins = [
     constants.ALLOWED_ORIGINS_STAGING,
