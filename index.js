@@ -357,7 +357,7 @@ app.get(
 );
 app.get(
   '/getSchoolFaculty/:id',
-  // cors(corsOptions),
+  cors(corsOptions),
   function (req, res) {
     try {
       sf.getSchoolFacultyById(req, res);
@@ -392,6 +392,6 @@ app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)
 // app.post('/subjects', ssu.createSubject)
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
     console.log(`App running on port ${port}.`)
 })
