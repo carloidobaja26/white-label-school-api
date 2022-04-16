@@ -46,7 +46,6 @@ app.use(
     })
 )
 app.get('/', (request, response) => {
-  passwordTest()
   response.json({ info: 'Node.js, Express, and Postgres API' })
 })
 async function passwordTest() {
