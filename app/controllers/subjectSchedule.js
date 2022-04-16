@@ -39,7 +39,8 @@ const deleteSubjectSchedule = (request, response) => {
     })
 }
 const getSubjectsSchedule = (request, response) => {
-    pool.query('SELECT * FROM "subjectOfferSchedule" ORDER BY id ASC', (error, results) => {
+    const id = parseInt(request.params.sId);
+    pool.query('select * from getSubjectSchedule($1)', [id], (error, results) => {
         if (error) {
             throw error
         }

@@ -17,12 +17,15 @@ const se = require('./app/controllers/enrollment')
 const cors = require("cors");
 const constants = require ('./app/constants/constant');
 
-const port = constants.PORT_VALUE
+var port = process.env.PORT || 8081;
+var server_host = process.env.YOUR_HOST || '0.0.0.0';
 //Cors config start
 const allowedOrigins = [
     constants.ALLOWED_ORIGINS_STAGING,
     constants.ALLOWED_ORIGINS_LIVE,
     constants.ALLOWED_ORIGINS_LOCALHOST,
+    constants.DOMAIN_FACULTY,
+    constants.DOMAIN_SCHOOL
   ];
   
   app.options("*", cors());
@@ -44,7 +47,6 @@ app.use(
     })
 )
 app.get('/', (request, response) => {
-  passwordTest()
   response.json({ info: 'Node.js, Express, and Postgres API' })
 })
 async function passwordTest() {
@@ -53,7 +55,7 @@ async function passwordTest() {
 }
 app.get(
     '/users',
-    cors(corsOptions),
+    //cors(corsOptions),
     function (req, res) {
       try {
         db.getUsers(req, res);
@@ -142,7 +144,7 @@ app.get(
 
 app.post(
   '/createSubject',
-  // cors(corsOptions),
+  cors(corsOptions),
   function (req, res) {
     try {
       ssu.createSubject(req, res);
@@ -153,7 +155,7 @@ app.post(
 );
 app.post(
   '/updatesubjects',
-  // cors(corsOptions),
+  cors(corsOptions),
   function (req, res) {
     try {
       ssu.updateSubject(req, res);
@@ -164,7 +166,7 @@ app.post(
 );
 app.post(
   '/deletesubjects',
-  // cors(corsOptions),
+  cors(corsOptions),
   function (req, res) {
     try {
       ssu.deleteSubject(req, res);
@@ -175,7 +177,7 @@ app.post(
 );
 app.get(
   '/subjects',
-  // cors(corsOptions),
+  cors(corsOptions),
   function (req, res) {
     try {
       ssu.getSubjects(req, res);
@@ -186,7 +188,7 @@ app.get(
 );
 app.get(
   '/subjects/:id',
-  // cors(corsOptions),
+  cors(corsOptions),
   function (req, res) {
     try {
       ssu.getSubjectsById(req, res);
@@ -230,8 +232,8 @@ app.post(
   }
 );
 app.get(
-  '/getSubjectsSchedule',
-  // cors(corsOptions),
+  '/getSubjectsSchedule/:sId',
+  cors(corsOptions),
   function (req, res) {
     try {
       ssus.getSubjectsSchedule(req, res);
@@ -241,7 +243,7 @@ app.get(
   }
 );
 app.get(
-  '/getSubjectsSchedule/:id',
+  '/getSubjectsSchedule/:sId/ssId',
   // cors(corsOptions),
   function (req, res) {
     try {
@@ -356,7 +358,7 @@ app.get(
 );
 app.get(
   '/getSchoolFaculty/:id',
-  // cors(corsOptions),
+  cors(corsOptions),
   function (req, res) {
     try {
       sf.getSchoolFacultyById(req, res);
@@ -391,6 +393,6 @@ app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)
 // app.post('/subjects', ssu.createSubject)
-app.listen(port, () => {
-    console.log(`App running on port ${port}.`)
-})
+app.listen(port,server_host, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});

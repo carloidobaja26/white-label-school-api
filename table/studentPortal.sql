@@ -161,6 +161,7 @@ ON sa."studentInfoId" = si."id";
 WHERE sos."schoolSemesterId" = 1 AND so."schoolYearId" = 1 AND si."studentNo" = 'stu1';
 
 
+
 CREATE OR REPLACE FUNCTION studentEnrollment(sId integer,syId integer,sN varchar(255)) RETURNS TABLE (
   id int,
   status varchar,
@@ -705,3 +706,37 @@ END
 $$;  
 
 CALL delete_school_faculty(3);
+
+CREATE OR REPLACE FUNCTION getSubjectSchedule(subjectId integer) 
+  RETURNS TABLE(
+    id int,
+    subjectCode varchar(255),
+    sectCode varchar(255),
+    schedule varchar(255),
+    firstName varchar(255),
+    lastName varchar(255),
+  schoolSemester varchar(255)
+) AS $$
+    DECLARE
+    BEGIN
+         RETURN QUERY
+select 
+sos."id", so."subjectCode",sc."sectCode",
+sos."schedule",sf."firstName",sf."lastName",
+ss."schoolSemester"
+from "subjectOfferSchedule" as sos
+INNER JOIN "subjectOffer" as so 
+on sos."subjectCodeId" = so."id"
+INNER JOIN "sectCode" as sc
+on sc."id" = sos."sectCodeId"
+INNER JOIN "schoolFaculty" as sf
+ON sf."id" = sos."facultyId"
+INNER JOIN "schoolSemester" as ss
+ON ss."id" = sos."schoolSemesterId"
+Where sos."subjectCodeId" = subjectId
+ORDER BY sos."id" ASC;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
