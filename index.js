@@ -18,6 +18,7 @@ const cors = require("cors");
 const constants = require ('./app/constants/constant');
 
 var port = process.env.PORT || 8081;
+var server_host = process.env.YOUR_HOST || '0.0.0.0';
 //Cors config start
 const allowedOrigins = [
     constants.ALLOWED_ORIGINS_STAGING,
@@ -392,6 +393,6 @@ app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)
 // app.post('/subjects', ssu.createSubject)
-app.listen(process.env.PORT || 3000, function(){
+app.listen(port,server_host, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
