@@ -1,13 +1,8 @@
 const Pool = require('pg').Pool
-const pool = new Pool({
-    user: 'me',
-    host: 'localhost',
-    database: 'api',
-    password: 'password',
-    port: 5432,
-})
+const config = require('../config/dbConfig');
+const pool = new Pool(config.db);
 const getUsers = (request, response) => {
-    pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
+    pool.query('SELECT * FROM "studentInfo" ORDER BY id ASC', (error, results) => {
         if (error) {
             throw error
         }
@@ -17,7 +12,7 @@ const getUsers = (request, response) => {
 const getUserById = (request, response) => {
     const id = parseInt(request.params.id)
 
-    pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+    pool.query('SELECT * FROM "studentInfo" WHERE id = $1', [id], (error, results) => {
         if (error) {
             throw error
         }
@@ -27,7 +22,7 @@ const getUserById = (request, response) => {
 const createUser = (request, response) => {
     const { name, email } = request.body
 
-    pool.query('INSERT INTO users (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
+    pool.query('INSERT INTO test (test) VALUES ($1)', [name], (error, results) => {
         if (error) {
             throw error
         }
